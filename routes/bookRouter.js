@@ -35,7 +35,12 @@ function routes(Book) {
       book.author = req.body.author;
       book.genre = req.body.genre;
       book.read = req.body.read;
-      book.save();
+      req.book.save((err) => {
+        if (err) {
+          return res.send(err);
+        }
+        return res.json(book);
+      });
       return res.json(book);
     })
     .patch((req, res) => {
@@ -47,6 +52,20 @@ function routes(Book) {
         const key = item[0];
         const value = item[1];
         book[key] = value;
+      });
+      req.book.save((err) => {
+        if (err) {
+          return res.send(err);
+        }
+        return res.json(book);
+      });
+    })
+    .delete((req, res) => {
+      req.book.remove((err) => {
+        if (err) {
+          return res.send(err);
+        }
+        return res.sendStatus(204);
       });
     });
   return bookRouter;
